@@ -76,10 +76,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $quantidade = $quantidades[$key];
                     $pedido = $_POST["pedido"];
                     $totalImpostos= $_POST["totalImpostos"];
+                    $totalImpostoUnitario= $_POST["impostounitario"][$key];
                     $totalVenda = $_POST["totalVenda"];
                     $valor_total = $_POST["valorTotal"][$key];
 
-                    $controller_vendas->createVenda($id_produto, $valor_unitario, $imposto, $cliente, $descricao, $quantidade, $valor_total, $pedido,$totalImpostos,$totalVenda);
+                    $controller_vendas->createVenda($id_produto, $valor_unitario, $imposto, $cliente, $descricao, $quantidade, $valor_total, $pedido,$totalImpostos,$totalVenda , $totalImpostoUnitario);
                 } else {
                     echo "Algum dos campos necessários não está definido.";
                 }

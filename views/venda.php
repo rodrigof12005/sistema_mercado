@@ -36,7 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <th>Produto</th>
                     <th>Quantidade</th>
                     <th>Valor Unitário</th>
-                    <th>Imposto (*100)</th>
+                    <th>Imposto %</th>
+                    <th>Imposto Unitário</th>
                     <th>Valor Total Unitário</th>
                     <th>Ação</th>
                 </tr>
@@ -59,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         }
                                         echo $imposto;
                                         ?>"
+
                                         data-id-tipo="<?php echo $produto['id_tipo_produto']; ?>">
                                     <?php echo $produto['descricao']; ?>
                                 </option>
@@ -67,7 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </td>
                     <td><input type="number" class="form-control quantidadeInput" name="quantidade[]" min="1" required></td>
                     <td><input type="text" class="form-control valorUnitarioInput" name="valor_unitario[]" readonly></td>
-                    <td><input type="text" class="form-control impostoInput" name="imposto[]" readonly></td>
+                    <td style="display: none;"><input type="text" class="form-control impostoInput" name="imposto[]" readonly></td>
+                    <td><input type="text" class="form-control impostoInputshow" name="impostoshow[]" readonly></td>
+                    <td><input type="text" class="form-control impostounitarioInput" name="impostounitario[]" readonly></td>
                     <td><input type="text" class="form-control valorTotalInput" name="valorTotal[]" readonly></td>
                     <td>
                         <?php if(count($produtos) >= 1): ?>
@@ -97,25 +101,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </form>
 
+    <!-- JavaScript -->
     <script>
         $(document).ready(function () {
             adicionarLinha();
 
             $(document).on('change', '.descricaoSelect', function () {
-                var selectedOption = $(this).find(':selected');
-                var valorUnitario = selectedOption.data('valor');
-                var imposto = selectedOption.data('imposto');
-                var row = $(this).closest('.produtoRow');
-
-                row.find('.valorUnitarioInput').val(valorUnitario);
-                row.find('.impostoInput').val(imposto);
-                calcularValorTotal(row);
-                calcularTotais();
+                atualizarImpostoUnitario($(this));
             });
 
             $(document).on('input', '.quantidadeInput', function () {
                 var row = $(this).closest('.produtoRow');
                 calcularValorTotal(row);
+                atualizarImpostoUnitario(row);
                 calcularTotais();
             });
         });
@@ -125,6 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             newRow.find('.quantidadeInput').val('');
             newRow.find('.valorUnitarioInput').val('');
             newRow.find('.impostoInput').val('');
+            newRow.find('.impostoInputshow').val('');
+            newRow.find('.impostounitarioInput').val('');
             newRow.find('.valorTotalInput').val('');
             $('#vendasTable tbody').append(newRow);
         }
@@ -148,6 +148,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             row.find('.valorTotalInput').val(valorTotal.toFixed(2));
         }
 
+        function atualizarImpostoUnitario(element) {
+            var selectedOption = element.find(':selected');
+            var valorUnitario = parseFloat(selectedOption.data('valor'));
+            var imposto = parseFloat(selectedOption.data('imposto'));
+            var impostoshow = parseFloat(selectedOption.data('imposto'))*100;
+            var row = element.closest('.produtoRow');
+            var quantidade = parseFloat(row.find('.quantidadeInput').val()) || 0;
+            var impostoUnitario = imposto * valorUnitario * quantidade;
+
+            row.find('.valorUnitarioInput').val(valorUnitario.toFixed(2));
+            row.find('.impostoInput').val(imposto.toFixed(2));
+            row.find('.impostoInputshow').val(impostoshow.toFixed(2));
+            row.find('.impostounitarioInput').val(impostoUnitario.toFixed(2));
+        }
+
         function calcularTotais() {
             var totalImpostos = 0;
             var totalVenda = 0;
@@ -166,5 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $('#totalVenda').val(totalVenda.toFixed(2));
         }
     </script>
+
 </div>
 </html>

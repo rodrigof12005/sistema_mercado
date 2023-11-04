@@ -50,6 +50,7 @@ $pagedVendas = array_slice($vendas, $start, $perPage); // Registros para a pági
                     <th>Quantidade</th>
                     <th>Valor Unitário</th>
                     <th>Imposto</th>
+                    <th>Imposto Unitário</th>
                     <th>Valor Total</th>
                 </tr>
                 </thead>
@@ -72,6 +73,7 @@ $pagedVendas = array_slice($vendas, $start, $perPage); // Registros para a pági
                         <td><?php echo $venda['quantidade']; ?></td>
                         <td><?php echo $venda['valor_unitario']; ?></td>
                         <td><?php echo $venda['imposto']*100; ?>%</td>
+                        <td><?php echo $venda['totalimpostounitario']?></td>
                         <td><?php echo $venda['valor_total']; ?></td>
                     </tr>
                 <?php endforeach; ?>

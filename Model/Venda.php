@@ -9,12 +9,12 @@ class Venda
         $this->conn = $conn;
     }
 
-    public function createVenda($id_produto, $valor_unitario, $imposto, $cliente, $descricao, $quantidade, $valor_total, $pedido, $totalImpostos, $totalVenda)
+    public function createVenda($id_produto, $valor_unitario, $imposto, $cliente, $descricao, $quantidade, $valor_total, $pedido, $totalImpostos, $totalVenda, $totalImpostoUnitario)
     {
         try {
-            $sql = "INSERT INTO venda (id_produto, valor_unitario, imposto, valor_total, cliente, descricao, quantidade, pedido, totalimpostos, totalvenda) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO venda (id_produto, valor_unitario, imposto, valor_total, cliente, descricao, quantidade, pedido, totalimpostos, totalvenda , totalimpostounitario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute([$id_produto, $valor_unitario, $imposto, $valor_total, $cliente, $descricao, $quantidade, $pedido, $totalImpostos, $totalVenda]);
+            $stmt->execute([$id_produto, $valor_unitario, $imposto, $valor_total, $cliente, $descricao, $quantidade, $pedido, $totalImpostos, $totalVenda, $totalImpostoUnitario]);
 
             echo "<script>alert('Venda realizada com sucesso!');window.location.href='/../views/venda.php';</script>";
         } catch (PDOException $e) {
